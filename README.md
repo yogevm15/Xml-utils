@@ -1,5 +1,5 @@
 # Xml-utils
-basic python xml utils such as parser and serializer
+Basic python xml utils such as parser and serializer
 # Usage
 ### Import:
 from XmlUtils import parse_from_file, parse_from_str, serialize_to_file, serialize_to_str
