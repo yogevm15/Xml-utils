@@ -17,6 +17,13 @@ Read xml file and parse it into list of elements
 param content: str - The xml content.
 return: list - A list of element, each element is dict with the keys: "name" for the name, "attributes" for the attributes dict and "inner" for all inner elements and raw content.
 
+#### serialize_to_file(elements):
+Serialize list of element into xml file
+
+param elements: list - The list of elements.
+param path: str - The path to the new xml file.
+return: None.
+
 #### serialize_to_str(elements):
 Serialize list of element into xml str
 
