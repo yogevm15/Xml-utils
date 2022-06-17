@@ -3,7 +3,7 @@ import re
 
 import FileHandler
 from XmlSyntaxException import *
-
+import collections.abc
 
 def parse_from_file(path):
     """Read xml file and parse it into list of elements
@@ -55,13 +55,25 @@ def serialize_to_str(elements):
 def serialize(elements, level):
     to_return = ""
     for element in elements:
-        to_return += "\t" * level + "<" + element["name"]
-        for key, value in element["attributes"].items():
-            to_return += "\n" + "\t" * (level + 1) + key + "=\"" + value + "\""
-        if len(element["inner"]) > 0:
-            to_return += ">\n" + serialize(element["inner"], level + 1) + "</" + element["name"] + ">\n"
+        if 'type' in element and element['type'] == 'comment':
+            to_return += "\t" * level + "<!--" + element["inner"]+'-->\n'
         else:
-            to_return += "\n" + "\t" * level + "/>\n"
+            to_return += "\t" * level + "<" + element["name"]
+            if "attributes" not in element:
+                element["attributes"] = {}
+            if "inner" not in element:
+                element["inner"] = []
+            for key, value in element["attributes"].items():
+                to_return += "\n" + "\t" * (level + 1) + key + "=\"" + value + "\""
+            if isinstance(element["inner"], collections.abc.Sequence) and not isinstance(element["inner"], str):
+                if len(element["inner"]) > 0:
+                    to_return += ">\n" + serialize(element["inner"], level + 1) + "\t" * level +"</" + element["name"] + ">\n"
+                else:
+                    to_return += "/>\n"
+            elif type(element["inner"]) is not None:
+                to_return += ">" + str(element["inner"]) + "</" + element["name"] + ">\n"
+            else:
+                to_return += "/>\n"
     return to_return
 
 
